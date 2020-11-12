@@ -5,5 +5,11 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('nickname','user_head','weibo','profile')
+        fields = ('id','nickname','user_head','weibo','profile')
+
+class UserLoginSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('username', 'password')
 
