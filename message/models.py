@@ -11,7 +11,7 @@ class Message(Common):
         db_table = 'message'
 
 
-class MessageImg(models.Model):
+class MessageImg(Common):
     message = models.ForeignKey(Message, on_delete=models.DO_NOTHING, related_name='images')  # 动态
     img = models.ImageField(upload_to='message')  # 图片
 

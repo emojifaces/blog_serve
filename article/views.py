@@ -17,7 +17,7 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         """
         重写权限规则
         """
-        if self.action == 'create':
+        if self.action in ['create', 'update']:
             return [IsAuthenticated()]
         return []
 
@@ -52,7 +52,7 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         更新文章
         """
         article = self.get_object()
-        serializer = self.get_serializer(article, data=request.data,partial=True)
+        serializer = self.get_serializer(article, data=request.data, partial=True)
         if not serializer.is_valid():
             return APIResponse(0, serializer.errors)
         serializer.save()
