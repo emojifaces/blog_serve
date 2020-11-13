@@ -3,14 +3,22 @@ from message.models import Message, MessageImg
 from user.serializers import UserInfoSerializer
 
 
+class MessageImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MessageImg
+        fields = ('id', 'img')
+
+
 class MessageSerializer(serializers.ModelSerializer):
     user = UserInfoSerializer(read_only=True)
-    images = serializers.StringRelatedField(many=True, read_only=True)
+    images = MessageImageSerializer(many=True, read_only=True)
     imgs = serializers.ListField(write_only=True, required=False, child=serializers.ImageField())
+    create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
 
     class Meta:
         model = Message
-        fields = ('user', 'content', 'images', 'create_time', 'imgs')
+        fields = ('id', 'user', 'content', 'images', 'create_time', 'imgs')
+        read_only_fields = ('id',)
 
     def create(self, validated_data):
         owner = validated_data.pop('owner')

@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.urls import path, include
+from django.urls import path, re_path
 from django.views.static import serve
 from rest_framework import routers
 from article.views import ArticleViewSet
@@ -14,7 +14,7 @@ router.register('user', UserViewSet)
 router.register('message', MessageViewSet)
 
 urlpatterns = [
-    path('media', serve, {'document_root': settings.MEDIA_ROOT}),
+    re_path('media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
