@@ -6,7 +6,7 @@ from article.views import ArticleViewSet
 from user.views import UserViewSet
 from message.views import MessageViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from common.views import upload_img
+from common.views import article_upload_img,upload_img
 
 router = routers.SimpleRouter()
 
@@ -18,6 +18,7 @@ urlpatterns = [
     re_path('media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}, name='media'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('article_upload_img', article_upload_img),
     path('upload_img', upload_img),
 ]
 
