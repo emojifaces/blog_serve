@@ -9,7 +9,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('id', 'user', 'title', 'content','create_time')
+        fields = ('id', 'user', 'title', 'content', 'create_time', 'img')
         read_only_fields = ('id',)
 
     def create(self, validated_data):
