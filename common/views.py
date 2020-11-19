@@ -39,4 +39,4 @@ def upload_img(request):
     :param request:
     :return:
     """
-    return APIResponse(1, 'ok')
+    return Response({'status': '1', 'msg': 'ok'})
