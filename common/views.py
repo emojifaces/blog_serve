@@ -1,12 +1,15 @@
 import os
 from django.urls import reverse
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 import uuid
 from myblog_serve.settings import MEDIA_ROOT, MEDIA_URL
+from common.utils import APIResponse
+from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def article_upload_img(request):
     """
     文章内容图片上传
@@ -29,8 +32,11 @@ def article_upload_img(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def upload_img(request):
-    data = request.data
-    print(data)
-
-    return Response({'code': 1})
+    """
+    element组件上传图片接口
+    :param request:
+    :return:
+    """
+    return APIResponse(1, 'ok')
