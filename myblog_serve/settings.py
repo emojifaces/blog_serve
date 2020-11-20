@@ -121,9 +121,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CORS_ORIGIN_ALLOW_ALL = True  # 允许所有主机跨域
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8080',
-)
 CORS_ALLOW_HEADERS = (
     'accept',
     'accept-encoding',
@@ -134,6 +131,7 @@ CORS_ALLOW_HEADERS = (
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
+    'bearer',
 )
 CORS_ALLOW_METHODS = (
     'DELETE',
