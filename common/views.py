@@ -32,7 +32,7 @@ def article_upload_img(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def upload_img(request):
     """
     element组件上传图片接口
