@@ -22,8 +22,6 @@ class ArticleSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('title字段不能为空')
         if not attrs.get('content'):
             raise serializers.ValidationError('content字段不能为空')
-        if not attrs.get('img'):
-            raise serializers.ValidationError('img字段不能为空')
         return attrs
 
     def create(self, validated_data):
