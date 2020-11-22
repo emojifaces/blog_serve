@@ -27,8 +27,6 @@ class MessageSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, attrs):
-        if not attrs.get('imgs'):
-            raise serializers.ValidationError('imgs字段不能为空')
         if not attrs.get('content'):
             raise serializers.ValidationError('content字段不能为空')
         return attrs

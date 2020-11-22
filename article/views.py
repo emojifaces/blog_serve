@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 
 class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.DestroyModelMixin,
                      mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin):
-    queryset = Article.objects.filter(is_delete=False)
+    queryset = Article.objects.filter(is_delete=False).order_by('-create_time')
     serializer_class = ArticleSerializer
     authentication_classes = [JWTAuthentication]
 

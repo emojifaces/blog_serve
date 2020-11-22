@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 
 class MessageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.DestroyModelMixin,
                      mixins.RetrieveModelMixin, mixins.CreateModelMixin):
-    queryset = Message.objects.filter(is_delete=False)
+    queryset = Message.objects.filter(is_delete=False).order_by('-create_time')
     serializer_class = MessageSerializer
     authentication_classes = [JWTAuthentication]
 
@@ -38,6 +38,7 @@ class MessageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         """
         创建动态消息
         """
+        print(request.data)
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return APIResponse(0, serializer.errors)
