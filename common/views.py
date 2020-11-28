@@ -1,8 +1,15 @@
+from django.utils import timezone
+import datetime
 import os
+
+from django.db.models import Q
 from django.urls import reverse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 import uuid
+
+from article.models import Article
+from message.models import Message
 from myblog_serve.settings import MEDIA_ROOT, MEDIA_URL
 from common.utils import APIResponse
 from rest_framework.permissions import IsAuthenticated
@@ -40,3 +47,21 @@ def upload_img(request):
     :return:
     """
     return Response({'status': '1', 'msg': 'ok'})
+
+
+@api_view(['GET'])
+def index_data(request):
+    """
+    获取过去七天的文章、动态数据量
+    """
+    current_time = timezone.now()
+    past_time = current_time - datetime.timedelta(days=7)
+    article_count = Article.objects.filter(Q(create_time__gte=past_time) & Q(create_time__lte=current_time),
+                                           is_delete=False).count()
+    message_count = Message.objects.filter(Q(create_time__gte=past_time) & Q(create_time__lte=current_time),
+                                           is_delete=False).count()
+    return_data = {
+        'article_count': article_count,
+        'message_count': message_count
+    }
+    return APIResponse(1, 'ok', return_data)
