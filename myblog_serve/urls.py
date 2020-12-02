@@ -10,17 +10,17 @@ from common.views import *
 
 router = routers.SimpleRouter()
 
-router.register('article', ArticleViewSet)
-router.register('user', UserViewSet)
-router.register('message', MessageViewSet)
+router.register('api/article', ArticleViewSet)
+router.register('api/user', UserViewSet)
+router.register('api/message', MessageViewSet)
 
 urlpatterns = [
     re_path('media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}, name='media'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('article_upload_img', article_upload_img),
-    path('upload_img', upload_img),
-    path('index_data', index_data),
+    path('api/article_upload_img', article_upload_img),
+    path('api/upload_img', upload_img),
+    path('api/index_data', index_data),
 ]
 
 urlpatterns += router.urls
