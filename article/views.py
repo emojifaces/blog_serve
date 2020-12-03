@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from common.utils import APIResponse
 from rest_framework import mixins
 from article.models import Article
-from article.serializers import ArticleSerializer
+from article.serializers import ArticleSerializer, ArticleListSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 
@@ -10,7 +10,6 @@ from rest_framework.permissions import IsAuthenticated
 class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.DestroyModelMixin,
                      mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin):
     queryset = Article.objects.filter(is_delete=False).order_by('-create_time')
-    serializer_class = ArticleSerializer
     authentication_classes = [JWTAuthentication]
 
     def get_permissions(self):
@@ -20,6 +19,12 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         if self.action in ['create', 'update']:
             return [IsAuthenticated()]
         return []
+
+    def get_serializer_class(self):
+        if self.action in ['list']:
+            return ArticleListSerializer
+        else:
+            return ArticleSerializer
 
     def list(self, request, *args, **kwargs):
         """
