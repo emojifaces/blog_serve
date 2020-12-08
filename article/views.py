@@ -31,7 +31,7 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         文章列表
         """
         articles = self.get_queryset()
-        serializer = self.get_serializer(articles, many=True)
+        serializer = self.get_serializer(articles, many=True, context={'request': request})
         return APIResponse(1, 'ok', serializer.data)
 
     def retrieve(self, request, *args, **kwargs):

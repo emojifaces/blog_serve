@@ -40,10 +40,11 @@ class ArticleSerializer(serializers.ModelSerializer):
 class ArticleListSerializer(serializers.ModelSerializer):
     user = UserInfoSerializer(read_only=True)
     content = serializers.SerializerMethodField(read_only=True)
+    is_mine = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Article
-        fields = ('id', 'user', 'title', 'content', 'create_time', 'img')
+        fields = ('id', 'user', 'title', 'content', 'create_time', 'img', 'is_mine')
         read_only_fields = ('id', 'title', 'create_time', 'img')
         extra_kwargs = {
             'create_time': {'format': '%Y-%m-%d %H:%M'}
@@ -54,3 +55,7 @@ class ArticleListSerializer(serializers.ModelSerializer):
         content_s = ''.join(pre.findall(instance.content))
         content_s = content_s.replace(u'&nbsp;', ' ')
         return content_s[0:20]
+
+    def get_is_mine(self, instance):
+        request = self.context.get('request')
+        return True if request.user == instance.user else False

@@ -23,7 +23,7 @@ class MessageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         动态消息列表
         """
         messages = self.get_queryset()
-        serializer = self.get_serializer(messages, many=True)
+        serializer = self.get_serializer(messages, many=True, context={'request': request})
         return APIResponse(1, 'ok', serializer.data)
 
     def retrieve(self, request, *args, **kwargs):
