@@ -38,7 +38,6 @@ class MessageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         """
         创建动态消息
         """
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return APIResponse(0, serializer.errors)
