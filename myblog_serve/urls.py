@@ -21,6 +21,7 @@ urlpatterns = [
     path('api/article_upload_img', article_upload_img),
     path('api/upload_img', upload_img),
     path('api/index_data', index_data),
+    path('api/wangEditor_uploadImg', wang_editor_upload_img),
 ]
 
 urlpatterns += router.urls

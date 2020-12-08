@@ -65,3 +65,31 @@ def index_data(request):
         'message_count': message_count
     }
     return APIResponse(1, 'ok', return_data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def wang_editor_upload_img(request):
+    """
+    wangeditor富文本编辑器图片上传接口
+    :param request:
+    :return: "errno": 0,
+            "data": [
+                "图片1地址",
+                "图片2地址",
+                "……"
+            ]
+    """
+    data = request.data
+    file = data.get('file')
+    file_suffix = file.name.split('.')[-1]
+    file_name = str(uuid.uuid1()).replace('-', '') + '.' + file_suffix
+    directory = os.path.join(MEDIA_ROOT, 'article')
+    if not os.path.exists(directory):
+        os.mkdir(directory)
+    file_path = os.path.join(MEDIA_ROOT, 'article', file_name)
+    with open(file_path, 'wb') as f:
+        for chunk in file.chunks():
+            f.write(chunk)
+    url = f"{request.scheme}://{request.get_host()}{reverse('media', kwargs={'path': 'article'})}/{file_name}"
+    return Response({'errno': 0, 'data': url})
