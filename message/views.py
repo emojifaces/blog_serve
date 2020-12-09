@@ -14,7 +14,7 @@ class MessageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
     authentication_classes = [JWTAuthentication]
 
     def get_permissions(self):
-        if self.action in ['create', 'update']:
+        if self.action in ['create', 'update', 'destroy']:
             return [IsAuthenticated()]
         return []
 

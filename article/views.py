@@ -16,7 +16,7 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         """
         重写权限规则
         """
-        if self.action in ['create', 'update']:
+        if self.action in ['create', 'update', 'destroy']:
             return [IsAuthenticated()]
         return []
 
