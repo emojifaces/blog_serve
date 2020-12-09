@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 
 class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.DestroyModelMixin,
                      mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin):
-    queryset = Article.objects.filter(is_delete=False).order_by('-create_time')
+    queryset = Article.objects.filter(is_delete=False).order_by('-create_time').all()
     authentication_classes = [JWTAuthentication]
 
     def get_permissions(self):
@@ -31,7 +31,10 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         文章列表
         """
         articles = self.get_queryset()
-        serializer = self.get_serializer(articles, many=True, context={'request': request})
+        page = self.paginate_queryset(articles)
+        if not page:
+            return APIResponse(0, '暂时没有更多动态')
+        serializer = self.get_serializer(page, many=True, context={'request': request})
         return APIResponse(1, 'ok', serializer.data)
 
     def retrieve(self, request, *args, **kwargs):
