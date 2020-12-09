@@ -20,7 +20,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ('id', 'user', 'content', 'images', 'create_time', 'imgs')
+        fields = ('id', 'user', 'content', 'images', 'create_time', 'imgs', 'is_mine')
         read_only_fields = ('id', 'user', 'create_time')
         extra_kwargs = {
             'create_time': {'format': '%Y-%m-%d %H:%M:%S'},
