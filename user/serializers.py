@@ -6,18 +6,60 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
+    """
+    用户信息序列化器
+    """
+
     class Meta:
         model = User
         fields = ('id', 'nickname', 'user_head', 'weibo', 'profile', 'sex')
+        read_only_fields = ('id',)
+
+    def update(self, instance, validated_data):
+        instance.nickname = validated_data.get('nickname', instance.nickname)
+        instance.user_head = validated_data.get('user_head', instance.user_head)
+        instance.weibo = validated_data.get('weibo', instance.weibo)
+        instance.profile = validated_data.get('profile', instance.weibo)
+        instance.sex = validated_data.get('sex', instance.sex)
+        instance.save()
+        return instance
 
 
-class UserLoginSerializer(serializers.ModelSerializer):
+class UserRegisterSerializer(serializers.ModelSerializer):
+    """
+    用户注册序列化器
+    """
+    code = serializers.CharField(max_length=10, required=True)  # 注册邀请码
+
     class Meta:
         model = User
-        fields = ('username', 'password')
+        fields = ('username', 'password', 'code')
+        extra_kwargs = {
+            'username': {'required': True},
+            'password': {'required': True},
+        }
+
+    def validate_code(self, data):
+        if data != '100033':
+            raise serializers.ValidationError('邀请码错误！')
+        return data
+
+    def create(self, validated_data):
+        del validated_data['code']
+        try:
+            user = User.objects.create(**validated_data)
+            user.set_password(validated_data['password'])
+            user.nickname = validated_data['username']
+            user.save()
+        except:
+            raise serializers.ValidationError('注册失败')
+        return user
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """
+    自定义JWT序列化器
+    """
 
     def validate(self, attrs):
         data = super().validate(attrs)

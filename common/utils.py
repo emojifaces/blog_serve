@@ -1,4 +1,5 @@
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class APIResponse(Response):
@@ -23,3 +24,14 @@ class APIResponse(Response):
         super().__init__(data=return_data, status=status,
                          template_name=template_name, headers=headers,
                          exception=exception, content_type=content_type)
+
+
+def get_token_for_user(user):
+    """
+    主动签发JWT
+    """
+    refresh = RefreshToken.for_user(user)
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token)
+    }

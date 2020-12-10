@@ -53,7 +53,7 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         if not serializer.is_valid():
             return APIResponse(0, serializer.errors)
         serializer.save(user=request.user)
-        return APIResponse(1, 'ok')
+        return APIResponse(1, 'ok', data=serializer.data)
 
     def update(self, request, *args, **kwargs):
         """
@@ -64,7 +64,7 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         if not serializer.is_valid():
             return APIResponse(0, serializer.errors)
         serializer.save()
-        return APIResponse(1, 'ok')
+        return APIResponse(1, 'ok', data=serializer.data)
 
     def destroy(self, request, *args, **kwargs):
         """

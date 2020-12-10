@@ -45,7 +45,7 @@ class MessageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         if not serializer.is_valid():
             return APIResponse(0, serializer.errors)
         serializer.save(owner=request.user)
-        return APIResponse(1, 'ok')
+        return APIResponse(1, 'ok', data=serializer.data)
 
     def destroy(self, request, *args, **kwargs):
         """
