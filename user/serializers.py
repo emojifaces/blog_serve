@@ -79,6 +79,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             'profile': self.user.profile,
             'sex': self.user.get_sex_display(),
             'user_head': user_head_url,
+            'email': self.user.email
         }
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)
