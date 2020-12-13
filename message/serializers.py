@@ -39,8 +39,14 @@ class MessageSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         owner = validated_data.pop('owner')
         imgs = validated_data.pop('imgs', None)
-        message = Message.objects.create(user=owner, **validated_data)
+        try:
+            message = Message.objects.create(user=owner, **validated_data)
+        except:
+            raise serializers.ValidationError('创建失败')
         if imgs:
             for img in imgs:
-                MessageImg.objects.create(message=message, img=img)
+                try:
+                    MessageImg.objects.create(message=message, img=img)
+                except:
+                    raise serializers.ValidationError('图片保存失败')
         return message

@@ -16,13 +16,16 @@ class UserInfoSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
     def update(self, instance, validated_data):
-        instance.nickname = validated_data.get('nickname', instance.nickname)
-        instance.user_head = validated_data.get('user_head', instance.user_head)
-        instance.weibo = validated_data.get('weibo', instance.weibo)
-        instance.profile = validated_data.get('profile', instance.weibo)
-        instance.sex = validated_data.get('sex', instance.sex),
-        instance.email = validated_data.get('email', instance.email)
-        instance.save()
+        try:
+            instance.nickname = validated_data.get('nickname', instance.nickname)
+            instance.user_head = validated_data.get('user_head', instance.user_head)
+            instance.weibo = validated_data.get('weibo', instance.weibo)
+            instance.profile = validated_data.get('profile', instance.weibo)
+            instance.sex = validated_data.get('sex', instance.sex),
+            instance.email = validated_data.get('email', instance.email)
+            instance.save()
+        except:
+            raise serializers.ValidationError('保存失败')
         return instance
 
 
@@ -55,6 +58,23 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         except:
             raise serializers.ValidationError('注册失败')
         return user
+
+
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('password',)
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def update(self, instance, validated_data):
+        try:
+            instance.set_password(validated_data['password'])
+            instance.save()
+        except:
+            raise serializers.ValidationError('密码修改失败')
+        return instance
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

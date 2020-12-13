@@ -26,14 +26,20 @@ class ArticleSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        article = Article.objects.create(**validated_data)
+        try:
+            article = Article.objects.create(**validated_data)
+        except:
+            raise serializers.ValidationError('创建失败')
         return article
 
     def update(self, instance, validated_data):
-        instance.title = validated_data.get('title', instance.title)
-        instance.content = validated_data.get('content', instance.content)
-        instance.img = validated_data.get('img', instance.img)
-        instance.save()
+        try:
+            instance.title = validated_data.get('title', instance.title)
+            instance.content = validated_data.get('content', instance.content)
+            instance.img = validated_data.get('img', instance.img)
+            instance.save()
+        except:
+            raise serializers.ValidationError('保存失败')
         return instance
 
 
