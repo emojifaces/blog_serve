@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
+
 from common.utils import APIResponse
 from rest_framework import mixins
 from article.models import Article
@@ -16,7 +18,7 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         """
         重写权限规则
         """
-        if self.action in ['create', 'update', 'destroy']:
+        if self.action in ['create', 'update', 'destroy', 'update_article']:
             return [IsAuthenticated()]
         return []
 
@@ -74,3 +76,17 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         article.is_delete = True
         article.save()
         return APIResponse(1, 'ok')
+
+    @action(detail=True, methods=['POST'])
+    def update_article(self, request, *args, **kwargs):
+        """
+        当前用户编辑自己的文章
+        """
+        article = self.get_object()
+        if article.user != request.user:
+            return APIResponse(0, '没有权限')
+        serializer = self.get_serializer(article, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return APIResponse(0, serializer.errors)
+        serializer.save()
+        return APIResponse(1, 'ok', data=serializer.data)
