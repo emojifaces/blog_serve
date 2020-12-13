@@ -21,7 +21,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
             instance.user_head = validated_data.get('user_head', instance.user_head)
             instance.weibo = validated_data.get('weibo', instance.weibo)
             instance.profile = validated_data.get('profile', instance.weibo)
-            instance.sex = validated_data.get('sex', instance.sex),
+            instance.sex = validated_data.get('sex', instance.sex)
             instance.email = validated_data.get('email', instance.email)
             instance.save()
         except:
