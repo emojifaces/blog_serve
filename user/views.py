@@ -24,7 +24,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Retriev
     authentication_classes = [JWTAuthentication]
 
     def get_permissions(self):
-        if self.action in ['update', 'change_password']:
+        if self.action in ['update_user_info', 'change_password']:
             return [IsAuthenticated()]
         else:
             return []
@@ -41,7 +41,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Retriev
         """
         修改用户信息
         """
-        user = request.user
+        user = self.get_object()
         serializer = self.get_serializer(user, data=request.data, partial=True)
         if not serializer.is_valid():
             return APIResponse(0, serializer.errors)
@@ -64,9 +64,21 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Retriev
         return APIResponse(1, 'ok', data=user_info)
 
     @action(detail=False, methods=['POST'])
+    def update_user_info(self, request, *args, **kwargs):
+        """
+        修改登录用户的用户信息
+        """
+        user = request.user
+        serializer = self.get_serializer(user, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return APIResponse(0, serializer.errors)
+        serializer.save()
+        return APIResponse(1, 'ok', data=serializer.data)
+
+    @action(detail=False, methods=['POST'])
     def change_password(self, request, *args, **kwargs):
         """
-        修改用户密码
+        修改登录用户的用户密码
         """
         user = request.user
         serializer = self.get_serializer(user, data=request.data)
