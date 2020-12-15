@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.pagination import PageNumberPagination
+from article.pagination import ArticlePageNumberPagination
 from common.utils import APIResponse
 from rest_framework import mixins
 from article.models import Article
@@ -13,7 +13,7 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
                      mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin):
     queryset = Article.objects.filter(is_delete=False).order_by('-create_time').all()
     authentication_classes = [JWTAuthentication]
-    pagination_class = PageNumberPagination
+    pagination_class = ArticlePageNumberPagination
 
     def get_permissions(self):
         """
