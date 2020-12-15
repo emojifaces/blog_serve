@@ -18,7 +18,7 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         """
         重写权限规则
         """
-        if self.action in ['create', 'update', 'destroy', 'update_article']:
+        if self.action in ['create', 'update', 'destroy', 'update_article', 'delete']:
             return [IsAuthenticated()]
         return []
 
@@ -73,8 +73,11 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         删除文章(逻辑删除)
         """
         article = self.get_object()
-        article.is_delete = True
-        article.save()
+        try:
+            article.is_delete = True
+            article.save()
+        except:
+            return APIResponse(0, '删除失败')
         return APIResponse(1, 'ok')
 
     @action(detail=True, methods=['POST'])
@@ -90,3 +93,18 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
             return APIResponse(0, serializer.errors)
         serializer.save()
         return APIResponse(1, 'ok', data=serializer.data)
+
+    @action(detail=True, methods=['POST'])
+    def delete(self, request, *args, **kwargs):
+        """
+        当前用户删除自己的文章
+        """
+        article = self.get_object()
+        if article.user != request.user:
+            return APIResponse(0, '没有权限')
+        try:
+            article.is_delete = True
+            article.save()
+        except:
+            return APIResponse(0, '删除失败')
+        return APIResponse(1, 'ok')

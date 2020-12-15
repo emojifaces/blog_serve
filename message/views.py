@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
+
 from message.models import Message
 from message.serializers import MessageSerializer
 from rest_framework import mixins
@@ -54,4 +56,19 @@ class MessageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         message = self.get_object()
         message.is_delete = True
         message.save()
+        return APIResponse(1, 'ok')
+
+    @action(detail=True, methods=['POST'])
+    def delete(self, request, *args, **kwargs):
+        """
+        删除当前登录用户自己的动态消息
+        """
+        message = self.get_object()
+        if message.user != request.user:
+            return APIResponse(0, '没有权限')
+        try:
+            message.is_delete = True
+            message.save()
+        except:
+            return APIResponse(0, '删除失败')
         return APIResponse(1, 'ok')
