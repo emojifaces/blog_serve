@@ -9,7 +9,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('id', 'user', 'title', 'content', 'create_time', 'img')
+        fields = ('id', 'user', 'title', 'content', 'create_time', 'img', 'update_time')
         read_only_fields = ('id', 'user', 'create_time')
         extra_kwargs = {
             'create_time': {'format': '%Y-%m-%d %H:%M'},
@@ -50,7 +50,7 @@ class ArticleListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('id', 'user', 'title', 'content', 'create_time', 'img', 'is_mine')
+        fields = ('id', 'user', 'title', 'content', 'create_time', 'img', 'is_mine', 'update_time')
         read_only_fields = ('id', 'title', 'create_time', 'img')
         extra_kwargs = {
             'create_time': {'format': '%Y-%m-%d %H:%M'}

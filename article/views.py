@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
-
+from rest_framework.pagination import PageNumberPagination
 from common.utils import APIResponse
 from rest_framework import mixins
 from article.models import Article
@@ -13,6 +13,7 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
                      mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin):
     queryset = Article.objects.filter(is_delete=False).order_by('-create_time').all()
     authentication_classes = [JWTAuthentication]
+    pagination_class = PageNumberPagination
 
     def get_permissions(self):
         """
@@ -37,7 +38,8 @@ class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Dest
         if not page:
             return APIResponse(0, '暂时没有更多动态')
         serializer = self.get_serializer(page, many=True, context={'request': request})
-        return APIResponse(1, 'ok', serializer.data)
+        count = {'count': articles.count()}
+        return APIResponse(1, 'ok', serializer.data, **count)
 
     def retrieve(self, request, *args, **kwargs):
         """
